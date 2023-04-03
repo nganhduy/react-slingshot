@@ -1,0 +1,38 @@
+version: 1.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: "build application"
+          command: npm run lint
+  test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: "build application"
+          command: npm run test
+  analyze:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: "build application"
+          command: npm audit
+
+workflows:
+  build-test-analyze:
+    jobs:
+      - build
+      - test:
+          require:
+            - build
+      - analyze:
+          require:
+            - test
